@@ -158,7 +158,6 @@ In the dataset, we have to fit rectangular bounding boxes on the images with obj
 
 <img src="img/1.png" alt="dataset"/>
 
-<img src="img/index.png" alt="dataset2"/>
 
 It is also important how many objects of each class are in the dataset. Below is the distribution of the dataset according to the classes.
 
@@ -196,7 +195,7 @@ python experiments/model_main_tf2.py --model_dir=training/reference/ --pipeline_
 
 * To monitor the training, you can launch a tensorboard instance by running tensorboard --logdir=training. And these are my results.
 
-<img src="training/reference50/training.png" alt="data"/>
+<img src="img/4.png" alt="data"/>
 
 Here it shows the error in classification classification loss. In other words, we can see how successful the model is in classifying the objects it detects by looking here. On the other hand, we see the error of localization loss in correctly locating the objects detected by our model. ( In the `ssd_resnet_50` model we use, the resnet model makes classification, while the SSD algorithm provides the location of the objects.) The total loss shows us what our total error is in these two.
 
@@ -208,24 +207,21 @@ In this experiment, a deeper network `ssd_resnet101_v1_fpn_640x640_coco17_tpu-8`
 
 The actually training process is as follows, the baseline being orange.
 
-<img src="training/resnet101/resnet101.png" alt="data"/>
+<img src="img/5.png" alt="data"/>
 
-#### Experiment 2: Resnet 152
-
-In this experiment, a deeper network `ssd_resnet152_v1_fpn_640x640_coco17_tpu-8` is used to replace Resnet101. We expect training with this model to yield better results. As can be seen in the loss chart below, it is seen that the total loss decreases faster. 
 
 <img src="training/resnet152/resnet152.png" alt="data"/>
 
-#### Experiment 3: Augmentation
+#### Experiment 2: Augmentation
 
 For the model to learn well, the dataset should represent as many different scenarios as possible. For this purpose, the duplication of the data set with applications such as the luminance level, rotation, and cutting of a part of the image is called augmentation. Random_horizontal_flip and random_crop_image augmentations were applied in the original config file of the model. In addition, I did the training by applying random_distort_color and observed the results.
 I did this by adding the following lines to the configuration file.
 
-<img src="training/resnet50_augmentation/Screenshot from 2021-11-17 12-19-31.png" alt="data"/>
+<img src="img/6.png" alt="data"/>
 
 random_distort_color could help combat against color space distortions such as lighting. This change was made using the `ssd_resnet50_v1_fpn_640x640_coco17_tpu-8` model used in my reference network. It is seen that the loss decreases faster when augmentation is applied.
 
-<img src="training/resnet50_augmentation/50_augment.png" alt="data"/>
+<img src="img/7.png" alt="data"/>
 
 #### Important Points
 
@@ -250,5 +246,7 @@ Finally, you can create a video of your model's inferences for any tf record fil
 python inference_video.py -labelmap_path label_map.pbtxt --model_path training/experiment0/exported_model/saved_model --tf_record_path /app/project/data/test/*.tf.record --config_path training/experiment0/pipeline_new.config --output_path animation.mp4
 
 ```
+https://user-images.githubusercontent.com/32412808/153576023-04d74358-79a9-4022-aa2f-b6e53bb0b18a.mp4
+
 
 
